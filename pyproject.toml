@@ -1,0 +1,36 @@
+[project]
+name = "data-analysis-agent"
+version = "0.1.0"
+description = "LangGraph data analysis agent with tool calling and memory."
+requires-python = ">=3.10"
+dependencies = [
+    "langchain>=1.4.3",
+    "langchain-openai>=1.6.7",
+    "langgraph>=1.2.12",
+    "langgraph-checkpoint-sqlite>=3.1.1",
+    "gradio>=6.0",
+    "pandas>=2.2",
+    "openpyxl>=3.1",
+    "pyarrow>=15",
+    "matplotlib>=3.9",
+    "python-dotenv>=1.0",
+    "fastembed>=0.8",
+    "socksio>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+data-agent = "data_agent.app:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.env
+memory/*.sqlite
+memory/*.sqlite-*
+artifacts/*
+!artifacts/.gitkeep
+data/*
+!data/.gitkeep
+!data/sample_sales.csv
+.DS_Store
+src/data_agent/__pycache__/

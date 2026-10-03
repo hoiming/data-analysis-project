@@ -1,0 +1,16 @@
+order_id,order_date,region,product,units,unit_price,channel
+1001,2025-01-03,North,Widget,12,25.0,online
+1002,2025-01-05,South,Gadget,4,80.0,store
+1003,2025-01-08,North,Widget,7,25.0,online
+1004,2025-01-12,East,Gadget,9,80.0,online
+1005,2025-01-15,West,Sprocket,15,12.5,store
+1006,2025-02-02,North,Sprocket,20,12.5,online
+1007,2025-02-06,South,Widget,3,25.0,store
+1008,2025-02-11,East,Widget,11,25.0,online
+1009,2025-02-18,West,Gadget,6,80.0,store
+1010,2025-03-01,North,Gadget,2,80.0,online
+1011,2025-03-04,South,Sprocket,18,12.5,online
+1012,2025-03-09,East,Sprocket,8,12.5,store
+1013,2025-03-14,West,Widget,14,25.0,online
+1014,2025-03-21,North,Widget,5,25.0,store
+1015,2025-03-28,South,Gadget,10,80.0,online
