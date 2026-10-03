@@ -30,11 +30,11 @@ DEEPSEEK_MODEL=deepseek-chat
 python -m data_agent.app
 ```
 
-Open the local URL Gradio prints. Drop CSV, TSV, Excel, Parquet, or JSON files into the sidebar, or put them in `data/` yourself. `data/sample_sales.csv` is included.
+Open the local URL Gradio prints. Upload a CSV or Excel file in the sidebar, or put a `.csv`, `.xlsx`, or `.xls` file in `data/` yourself. `data/sample_sales.csv` is included.
 
 ## What the agent can do
 
-It can list files, describe columns, filter rows, aggregate (including `units * price` via `sum_product`), count values, correlate numeric columns, and save a matplotlib chart into `artifacts/`. The chat shows that chart.
+It can list files, describe columns, filter rows, aggregate (including `units * price` via `sum_product`), count values, correlate numeric columns, and save a matplotlib chart into `artifacts/`. The chat shows that chart. It can also fit scikit-learn models: linear regression, SVM, and KNN, and report held-out scores.
 
 It cannot run arbitrary Python. Filters and aggregations are structured tool arguments.
 

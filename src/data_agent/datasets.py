@@ -15,7 +15,7 @@ import pandas as pd
 
 from data_agent.config import settings
 
-SUPPORTED_SUFFIXES = {".csv", ".tsv", ".xlsx", ".xls", ".parquet", ".json"}
+SUPPORTED_SUFFIXES = {".csv", ".xlsx", ".xls"}
 FilterOp = Literal["eq", "ne", "gt", "gte", "lt", "lte", "contains", "not_contains", "in"]
 AggName = Literal["count", "sum", "mean", "min", "max", "nunique", "median"]
 
@@ -53,7 +53,7 @@ def resolve_dataset(name: str) -> Path:
         raise DatasetError("That file is outside the data folder.")
     if path.suffix.lower() not in SUPPORTED_SUFFIXES:
         raise DatasetError(
-            f"Unsupported file type '{path.suffix}'. Use csv, tsv, xlsx, parquet, or json."
+            f"Unsupported file type '{path.suffix}'. Use a .csv, .xlsx, or .xls file."
         )
     if not path.is_file():
         known = ", ".join(item["name"] for item in _names_only()) or "(none)"
@@ -71,16 +71,10 @@ def load_dataset(name: str, sheet_name: str | int | None = None) -> pd.DataFrame
     suffix = path.suffix.lower()
     if suffix == ".csv":
         frame = pd.read_csv(path)
-    elif suffix == ".tsv":
-        frame = pd.read_csv(path, sep="\t")
     elif suffix in {".xlsx", ".xls"}:
         frame = pd.read_excel(path, sheet_name=0 if sheet_name is None else sheet_name)
-    elif suffix == ".parquet":
-        frame = pd.read_parquet(path)
-    elif suffix == ".json":
-        frame = pd.read_json(path)
     else:
-        raise DatasetError(f"Unsupported file type '{suffix}'.")
+        raise DatasetError(f"Unsupported file type '{suffix}'. Use a .csv, .xlsx, or .xls file.")
 
     if not isinstance(frame, pd.DataFrame):
         raise DatasetError("That file did not load as a single table.")

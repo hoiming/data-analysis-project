@@ -8,6 +8,7 @@ from typing import Any
 from langchain.tools import ToolRuntime, tool
 
 from data_agent.charts import plot_chart as render_chart
+from data_agent.ml import train_model
 from data_agent.datasets import (
     DatasetError,
     aggregate,
@@ -30,6 +31,7 @@ def build_tools() -> list[Any]:
         count_values,
         correlate_numeric,
         plot_dataset,
+        train_ml_model,
         save_finding,
         save_preference,
         search_memory,
@@ -155,6 +157,39 @@ def plot_dataset(
             y=y.strip() or None,
             title=title.strip() or None,
             filters=_object_list(filters_json, "filters_json"),
+            sheet_name=_sheet(sheet_name),
+        )
+    )
+
+
+@tool
+def train_ml_model(
+    name: str,
+    target: str,
+    method: str,
+    features_json: str = "[]",
+    task: str = "auto",
+    test_size: float = 0.25,
+    n_neighbors: int = 5,
+    sheet_name: str = "",
+) -> str:
+    """Fit a scikit-learn model and return held-out metrics.
+
+    method is linear_regression, svm, or knn.
+    linear_regression predicts a numeric target.
+    svm and knn use task "regression" or "classification". task "auto" classifies when the target has few distinct labels, otherwise it regresses.
+    features_json is a JSON list of feature columns. Leave it empty to use every column except the target.
+    n_neighbors applies only to knn.
+    """
+    return _guard(
+        lambda: train_model(
+            name,
+            target,
+            method,
+            features=_string_list(features_json) or None,
+            task=task,
+            test_size=test_size,
+            n_neighbors=n_neighbors,
             sheet_name=_sheet(sheet_name),
         )
     )

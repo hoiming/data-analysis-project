@@ -48,15 +48,19 @@ def save_uploads(files: list[str] | str | None) -> pd.DataFrame:
     if not files:
         return dataset_table()
     paths = files if isinstance(files, list) else [files]
+    skipped: list[str] = []
     for raw in paths:
         source = Path(raw)
         if source.suffix.lower() not in SUPPORTED_SUFFIXES:
+            skipped.append(source.name)
             continue
         target = settings.data_dir / source.name
         if target.exists() and target.resolve() != source.resolve():
             target = settings.data_dir / f"{source.stem}-{uuid4().hex[:6]}{source.suffix}"
         if source.resolve() != target.resolve():
             shutil.copy(source, target)
+    if skipped:
+        gr.Warning("Only CSV and Excel files can be uploaded. Skipped: " + ", ".join(skipped))
     return dataset_table()
 
 
@@ -109,7 +113,7 @@ def build() -> gr.Blocks:
     with gr.Blocks(title="Data analysis agent") as demo:
         gr.Markdown(
             f"""# Data analysis agent
-Ask questions about CSV, Excel, Parquet, or JSON files in `data/`.
+Ask questions about CSV or Excel files in `data/`.
 The agent calls tools, remembers this conversation, and can recall findings from earlier ones.
 
 {key_note}"""
@@ -118,9 +122,9 @@ The agent calls tools, remembers this conversation, and can recall findings from
         with gr.Row():
             with gr.Column(scale=1):
                 upload = gr.File(
-                    label="Drop files into the data folder",
+                    label="Upload a CSV or Excel file",
                     file_count="multiple",
-                    file_types=[".csv", ".tsv", ".xlsx", ".xls", ".parquet", ".json"],
+                    file_types=[".csv", ".xlsx", ".xls"],
                     type="filepath",
                     height=140,
                 )
@@ -155,7 +159,10 @@ The agent calls tools, remembers this conversation, and can recall findings from
 
 
 def main() -> None:
-    build().launch(server_name="127.0.0.1")
+    build().launch(
+        server_name="127.0.0.1",
+        allowed_paths=[str(settings.artifacts_dir), str(settings.data_dir)],
+    )
 
 
 if __name__ == "__main__":
